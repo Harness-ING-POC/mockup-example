@@ -1,0 +1,4 @@
+apiVersion: v2
+name: transaction-db
+description: PostgreSQL database for transactions
+version: 0.1.0

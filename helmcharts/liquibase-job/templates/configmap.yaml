@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: liquibase-changelog
+data:
+  changelog.xml: |
+{{ .Files.Get "files/changelog.xml" | indent 4 }}

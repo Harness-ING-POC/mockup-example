@@ -1,0 +1,4 @@
+apiVersion: v2
+name: transaction-ingestor
+description: Microservice to ingest transactions
+version: 0.1.0

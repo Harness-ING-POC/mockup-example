@@ -1,0 +1,5 @@
+postgresql:
+  user: postgres
+  password: postgres
+  db: transactions
+  port: 5432

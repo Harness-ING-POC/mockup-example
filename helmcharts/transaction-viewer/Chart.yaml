@@ -1,0 +1,4 @@
+apiVersion: v2
+name: transaction-viewer
+description: Microservice to view transactions
+version: 0.1.0

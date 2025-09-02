@@ -1,0 +1,4 @@
+apiVersion: v2
+name: transaction-sender
+description: A Helm chart for sending transactions to the ingestor service
+version: 0.1.0

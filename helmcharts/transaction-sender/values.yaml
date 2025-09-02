@@ -1,0 +1,14 @@
+image:
+  repository: python
+  tag: "3.11-slim"
+
+job:
+  name: send-transactions
+  completions: 100
+  parallelism: 1
+  restartPolicy: Never
+
+load:
+  totalTransactions: 100
+  delayMs: 100
+  targetUrl: http://132.220.15.81/transaction

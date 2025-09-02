@@ -1,0 +1,4 @@
+apiVersion: v2
+name: liquibase-job
+description: A Helm chart for running Liquibase schema changes
+version: 1.0.0

@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.job.name }}
+spec:
+  completions: {{ .Values.job.completions }}
+  parallelism: {{ .Values.job.parallelism }}
+  template:
+    spec:
+      restartPolicy: {{ .Values.job.restartPolicy }}
+      containers:
+        - name: sender
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["python", "-c"]
+          args:
+            - |
+            
+              import subprocess
+              subprocess.run(["pip", "install", "requests"])
+
+              import requests, time, uuid, random
+              headers = {"Host": "transaction-ingestor.com"}
+              for i in range({{ .Values.load.totalTransactions }}):
+                  payload = {
+                      "username": f"user_{random.randint(1, 100)}",
+                      "transaction_id": str(uuid.uuid4()),
+                      "amount": round(random.uniform(10, 1000), 2)
+                  }
+                  try:
+                      r = requests.post("{{ .Values.load.targetUrl }}", json=payload, headers=headers)
+                      print(f"[{i+1}] Sent: {payload} -> {r.status_code}")
+                  except Exception as e:
+                      print(f"Error: {e}")
+                  time.sleep({{ .Values.load.delayMs }} / 1000)
