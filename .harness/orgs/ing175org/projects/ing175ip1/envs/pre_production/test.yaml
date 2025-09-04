@@ -1,0 +1,8 @@
+environment:
+  name: test
+  identifier: test
+  description: ""
+  tags: {}
+  type: PreProduction
+  orgIdentifier: ing175org
+  projectIdentifier: ing175ip1
