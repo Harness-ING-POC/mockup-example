@@ -1,0 +1,46 @@
+pipeline:
+  name: Kingsroad
+  identifier: Kingsroad
+  projectIdentifier: ing175ip1
+  orgIdentifier: ing175org
+  tags: {}
+  stages:
+    - stage:
+        name: Deploy DB
+        identifier: Deploy_DB
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: NativeHelm
+          service:
+            serviceRef: transactiondb
+            gitBranch: main
+          environment:
+            environmentRef: test
+            gitBranch: main
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: k8shelm
+          execution:
+            steps:
+              - step:
+                  name: Helm Deployment
+                  identifier: helmDeployment
+                  type: HelmDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Helm Rollback
+                  identifier: helmRollback
+                  type: HelmRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
