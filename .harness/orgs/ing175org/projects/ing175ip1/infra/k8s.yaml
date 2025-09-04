@@ -1,0 +1,14 @@
+infrastructureDefinition:
+  name: k8s-helm
+  identifier: k8shelm
+  orgIdentifier: ing175org
+  projectIdentifier: ing175ip1
+  environmentRef: test
+  deploymentType: NativeHelm
+  type: KubernetesDirect
+  spec:
+    connectorRef: k8sprod
+    namespace: default
+    releaseName: release-<+INFRA_KEY_SHORT_ID>
+  allowSimultaneousDeployments: true
+  scopedServices: []
