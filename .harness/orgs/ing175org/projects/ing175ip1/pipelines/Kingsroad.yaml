@@ -44,3 +44,118 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
+    - parallel:
+        - stage:
+            name: transaction-ingestor
+            identifier: transactioningestor
+            description: ""
+            type: Deployment
+            spec:
+              deploymentType: NativeHelm
+              service:
+                serviceRef: transactioningestor
+                gitBranch: main
+              execution:
+                steps:
+                  - step:
+                      name: Helm Deployment
+                      identifier: helmDeployment
+                      type: HelmDeploy
+                      timeout: 10m
+                      spec:
+                        skipDryRun: false
+                rollbackSteps:
+                  - step:
+                      name: Helm Rollback
+                      identifier: helmRollback
+                      type: HelmRollback
+                      timeout: 10m
+                      spec: {}
+              environment:
+                environmentRef: test
+                deployToAll: false
+                infrastructureDefinitions:
+                  - identifier: k8shelm
+            tags: {}
+            failureStrategies:
+              - onFailure:
+                  errors:
+                    - AllErrors
+                  action:
+                    type: StageRollback
+        - stage:
+            name: transaction-viewer
+            identifier: transactionviewer
+            description: ""
+            type: Deployment
+            spec:
+              deploymentType: NativeHelm
+              service:
+                serviceRef: transactionviewer
+                gitBranch: main
+              execution:
+                steps:
+                  - step:
+                      name: Helm Deployment
+                      identifier: helmDeployment
+                      type: HelmDeploy
+                      timeout: 10m
+                      spec:
+                        skipDryRun: false
+                rollbackSteps:
+                  - step:
+                      name: Helm Rollback
+                      identifier: helmRollback
+                      type: HelmRollback
+                      timeout: 10m
+                      spec: {}
+              environment:
+                environmentRef: test
+                deployToAll: false
+                infrastructureDefinitions:
+                  - identifier: k8shelm
+            tags: {}
+            failureStrategies:
+              - onFailure:
+                  errors:
+                    - AllErrors
+                  action:
+                    type: StageRollback
+    - stage:
+        name: transaction-sender
+        identifier: transactionsender
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: NativeHelm
+          service:
+            serviceRef: transactionsender
+            gitBranch: main
+          execution:
+            steps:
+              - step:
+                  name: Helm Deployment
+                  identifier: helmDeployment
+                  type: HelmDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Helm Rollback
+                  identifier: helmRollback
+                  type: HelmRollback
+                  timeout: 10m
+                  spec: {}
+          environment:
+            environmentRef: test
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: k8shelm
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
