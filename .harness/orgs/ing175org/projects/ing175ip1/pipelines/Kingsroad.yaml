@@ -41,7 +41,7 @@ pipeline:
                       type: Inline
                       spec:
                         script: |-
-                          KUBECONFIG=${KUBECONFIG_PATH} helm list
+                          KUBECONFIG=${KUBECONFIG_PATH} helm list -n default
 
                           KUBECONFIG=${KUBECONFIG_PATH} kubectl get pod
                     environmentVariables: []
