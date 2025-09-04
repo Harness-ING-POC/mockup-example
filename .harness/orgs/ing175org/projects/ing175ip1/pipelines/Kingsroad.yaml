@@ -177,3 +177,21 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
+    - stage:
+        name: deploy-app
+        identifier: deployapp
+        tags: {}
+        template:
+          templateRef: deployapp
+          versionLabel: 0.0.1
+          templateInputs:
+            type: Deployment
+            spec:
+              environment:
+                environmentRef: <+input>
+                environmentInputs: <+input>
+                serviceOverrideInputs: <+input>
+                infrastructureDefinitions: <+input>
+              service:
+                serviceRef: <+input>
+                serviceInputs: <+input>
