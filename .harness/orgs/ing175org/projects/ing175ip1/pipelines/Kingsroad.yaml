@@ -32,7 +32,7 @@ pipeline:
                     skipDryRun: false
               - step:
                   type: ShellScript
-                  name: ShellScript_1
+                  name: Check status
                   identifier: ShellScript_1
                   spec:
                     shell: Bash
@@ -43,9 +43,10 @@ pipeline:
                         script: |-
                           KUBECONFIG=${KUBECONFIG_PATH} helm list -n default
 
-                          KUBECONFIG=${KUBECONFIG_PATH} kubectl get pod
+                          KUBECONFIG=${KUBECONFIG_PATH} kubectl get pod -n default
                     environmentVariables: []
                     outputVariables: []
+                    includeInfraSelectors: false
                   timeout: 10m
             rollbackSteps:
               - step:
