@@ -1,0 +1,44 @@
+template:
+  name: deploy-app
+  identifier: deployapp
+  versionLabel: 0.0.1
+  type: Stage
+  projectIdentifier: ing175ip1
+  orgIdentifier: ing175org
+  description: Template which deploys the application
+  tags: {}
+  spec:
+    type: Deployment
+    spec:
+      deploymentType: NativeHelm
+      environment:
+        environmentRef: <+input>
+        deployToAll: false
+        environmentInputs: <+input>
+        serviceOverrideInputs: <+input>
+        infrastructureDefinitions: <+input>
+      service:
+        serviceRef: <+input>
+        serviceInputs: <+input>
+      execution:
+        steps:
+          - step:
+              name: Helm Deployment
+              identifier: helmDeployment
+              type: HelmDeploy
+              timeout: 10m
+              spec:
+                skipDryRun: false
+        rollbackSteps:
+          - step:
+              name: Helm Rollback
+              identifier: helmRollback
+              type: HelmRollback
+              timeout: 10m
+              spec: {}
+    failureStrategies:
+      - onFailure:
+          errors:
+            - AllErrors
+          action:
+            type: StageRollback
