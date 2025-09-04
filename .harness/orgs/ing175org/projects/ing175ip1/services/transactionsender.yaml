@@ -1,0 +1,28 @@
+service:
+  name: transaction-sender
+  identifier: transactionsender
+  serviceDefinition:
+    type: NativeHelm
+    spec:
+      manifests:
+        - manifest:
+            identifier: transactionsender
+            type: HelmChart
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: githubaccount
+                  gitFetchType: Branch
+                  folderPath: helmcharts/transaction-sender
+                  branch: main
+              subChartPath: ""
+              valuesPaths:
+                - helmcharts/transaction-sender/values.yaml
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+              helmVersion: V3
+              fetchHelmChartMetadata: false
+  gitOpsEnabled: false
+  orgIdentifier: ing175org
+  projectIdentifier: ing175ip1
