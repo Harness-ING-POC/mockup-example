@@ -1,0 +1,6 @@
+overrides:
+  cliEnvironmentVariables:
+    - name: caca
+      type: String
+      value: maca
+      required: false
