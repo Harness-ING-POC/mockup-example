@@ -52,5 +52,8 @@ template:
                       action:
                         type: Ignore
     stageType: Deployment
+    strategy:
+      matrix:
+        service: <+json.list("weights", <+pipeline.variables.services>)>
   identifier: Route_traffic
   versionLabel: v1
