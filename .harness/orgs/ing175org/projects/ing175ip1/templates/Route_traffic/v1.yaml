@@ -1,0 +1,10 @@
+template:
+  name: Route traffic
+  type: StepGroup
+  projectIdentifier: ing175ip1
+  orgIdentifier: ing175org
+  spec:
+    steps: []
+    stageType: Deployment
+  identifier: Route_traffic
+  versionLabel: v1
