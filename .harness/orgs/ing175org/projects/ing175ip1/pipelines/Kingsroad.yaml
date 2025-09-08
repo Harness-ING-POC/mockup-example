@@ -161,6 +161,12 @@ pipeline:
                               spec:
                                 count: 4
                           timeout: 10m
+                  - stepGroup:
+                      name: Route traffic 2
+                      identifier: Route_traffic_2
+                      template:
+                        templateRef: Route_traffic
+                        versionLabel: v1
                 rollbackSteps:
                   - step:
                       name: Helm Rollback
