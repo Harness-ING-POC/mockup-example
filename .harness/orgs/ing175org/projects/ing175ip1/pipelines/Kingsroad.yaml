@@ -113,13 +113,197 @@ pipeline:
                 gitBranch: main
               execution:
                 steps:
+                  - parallel:
+                      - step:
+                          type: HelmDeploy
+                          name: HelmDeploy_next_version
+                          identifier: HelmDeploy_next_version
+                          spec:
+                            skipDryRun: false
+                            ignoreReleaseHistFailStatus: false
+                          timeout: 10m
+                      - step:
+                          type: HelmDeploy
+                          name: HelmDeploy_baseline
+                          identifier: HelmDeploy_baseline
+                          spec:
+                            skipDryRun: false
+                            ignoreReleaseHistFailStatus: false
+                          timeout: 10m
                   - step:
-                      name: Helm Deployment
-                      identifier: helmDeployment
-                      type: HelmDeploy
-                      timeout: 10m
+                      type: K8sApply
+                      name: Route traffic
+                      identifier: Route_traffic
                       spec:
                         skipDryRun: false
+                        skipSteadyStateCheck: false
+                        skipRendering: false
+                        overrides: []
+                        filePaths:
+                          - test
+                      timeout: 10m
+                  - step:
+                      type: Verify
+                      name: Auto canary analysis
+                      identifier: Auto_canary_analysis
+                      spec:
+                        isMultiServicesOrEnvs: false
+                        type: Auto
+                        monitoredService:
+                          type: Default
+                          spec: {}
+                        spec:
+                          sensitivity: HIGH
+                          duration: 15m
+                      timeout: 2h
+                      failureStrategies:
+                        - onFailure:
+                            errors:
+                              - Verification
+                            action:
+                              type: ManualIntervention
+                              spec:
+                                timeout: 2h
+                                onTimeout:
+                                  action:
+                                    type: StageRollback
+                        - onFailure:
+                            errors:
+                              - Unknown
+                            action:
+                              type: ManualIntervention
+                              spec:
+                                timeout: 2h
+                                onTimeout:
+                                  action:
+                                    type: Ignore
+                    contextType: Pipeline
+                  - step:
+                      type: K8sApply
+                      name: Route Traffic
+                      identifier: Route_Traffic
+                      spec:
+                        skipDryRun: false
+                        skipSteadyStateCheck: false
+                        skipRendering: false
+                        overrides: []
+                        filePaths:
+                          - test
+                      timeout: 10m
+                  - step:
+                      type: Verify
+                      name: Auto canary analysis 2
+                      identifier: Auto_canary_analysis_2
+                      spec:
+                        isMultiServicesOrEnvs: false
+                        type: Auto
+                        monitoredService:
+                          type: Default
+                          spec: {}
+                        spec:
+                          sensitivity: HIGH
+                          duration: 15m
+                      timeout: 2h
+                      failureStrategies:
+                        - onFailure:
+                            errors:
+                              - Verification
+                            action:
+                              type: ManualIntervention
+                              spec:
+                                timeout: 2h
+                                onTimeout:
+                                  action:
+                                    type: StageRollback
+                        - onFailure:
+                            errors:
+                              - Unknown
+                            action:
+                              type: ManualIntervention
+                              spec:
+                                timeout: 2h
+                                onTimeout:
+                                  action:
+                                    type: Ignore
+                  - step:
+                      type: K8sApply
+                      name: route Traffic
+                      identifier: route_Traffic
+                      spec:
+                        skipDryRun: false
+                        skipSteadyStateCheck: false
+                        skipRendering: false
+                        overrides: []
+                        filePaths:
+                          - trest
+                      timeout: 10m
+                  - step:
+                      type: Verify
+                      name: Canary analysis 3
+                      identifier: Canary_analysis_3
+                      spec:
+                        isMultiServicesOrEnvs: false
+                        type: Auto
+                        monitoredService:
+                          type: Default
+                          spec: {}
+                        spec:
+                          sensitivity: HIGH
+                          duration: 15m
+                      timeout: 2h
+                      failureStrategies:
+                        - onFailure:
+                            errors:
+                              - Verification
+                            action:
+                              type: ManualIntervention
+                              spec:
+                                timeout: 2h
+                                onTimeout:
+                                  action:
+                                    type: StageRollback
+                        - onFailure:
+                            errors:
+                              - Unknown
+                            action:
+                              type: ManualIntervention
+                              spec:
+                                timeout: 2h
+                                onTimeout:
+                                  action:
+                                    type: Ignore
+                  - parallel:
+                      - step:
+                          type: HelmDelete
+                          name: HelmDelete_baseline
+                          identifier: HelmDelete_baseline
+                          spec:
+                            dryRun: false
+                          timeout: 10m
+                      - step:
+                          type: K8sScale
+                          name: Canary scale
+                          identifier: Canary_scale
+                          spec:
+                            workload: deployment/transaction-viewer-canary
+                            skipSteadyStateCheck: false
+                            instanceSelection:
+                              type: Count
+                              spec:
+                                count: 4
+                          timeout: 10m
+                  - step:
+                      type: K8sApply
+                      name: Route traffic to canary podss
+                      identifier: Route_traffic_to_canary_podss
+                      spec:
+                        skipDryRun: false
+                        skipSteadyStateCheck: false
+                        skipRendering: false
+                        overrides: []
+                        filePaths:
+                          - test
+                      timeout: 10m
                 rollbackSteps:
                   - step:
                       name: Helm Rollback
