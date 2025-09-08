@@ -130,6 +130,12 @@ pipeline:
                             skipDryRun: false
                             ignoreReleaseHistFailStatus: false
                           timeout: 10m
+                  - stepGroup:
+                      name: Route traffic
+                      identifier: Route_traffic
+                      template:
+                        templateRef: Route_traffic
+                        versionLabel: v1
                   - parallel:
                       - step:
                           type: HelmDelete
