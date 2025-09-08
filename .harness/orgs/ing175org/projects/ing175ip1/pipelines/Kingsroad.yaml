@@ -4,6 +4,11 @@ pipeline:
   projectIdentifier: ing175ip1
   orgIdentifier: ing175org
   tags: {}
+  variables:
+    - name: services
+      type: String
+      description: ""
+      value: "{\"weights\":[ { \"baseline\": \"5\", \"canary\": \"5\" }, { \"baseline\": \"25\", \"canary\": \"25\" }, { \"baseline\": \"75\", \"canary\": \"75\" } ]}"
   stages:
     - stage:
         name: Deploy DB
