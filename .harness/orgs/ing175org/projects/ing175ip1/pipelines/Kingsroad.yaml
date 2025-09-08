@@ -167,6 +167,28 @@ pipeline:
                       template:
                         templateRef: Route_traffic
                         versionLabel: v1
+                  - step:
+                      type: K8sScale
+                      name: Cleanup
+                      identifier: Cleanup
+                      spec:
+                        workload: deployment/transaction-viewer
+                        skipSteadyStateCheck: false
+                        instanceSelection:
+                          type: Count
+                          spec:
+                            count: 0
+                      timeout: 10m
+                  - step:
+                      type: Email
+                      name: Email_1
+                      identifier: Email_1
+                      spec:
+                        to: test-email@email.email
+                        cc: ""
+                        subject: "[DEPLOY][CANARY_COMPLETE]"
+                        body: Body and soul
+                      timeout: 10m
                 rollbackSteps:
                   - step:
                       name: Helm Rollback
