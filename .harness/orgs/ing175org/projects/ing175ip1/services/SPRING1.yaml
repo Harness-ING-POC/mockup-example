@@ -1,0 +1,6 @@
+
+service:
+  name: SPRING1
+  identifier: SPRING1
+  orgIdentifier: ing175org
+  projectIdentifier: ing175ip1
