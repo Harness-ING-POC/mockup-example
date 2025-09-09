@@ -26,7 +26,7 @@ template:
                     gitFetchType: Branch
                     branch: main
                 valuesPaths:
-                  - /helmcharts/transcation-viewer/values.yaml
+                  - helmcharts/transaction-viewer/values.yaml
           timeout: 10m
       - step:
           type: Verify
