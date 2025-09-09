@@ -1,0 +1,20 @@
+inputSet:
+  name: cronjob-input
+  identifier: cronjobinput
+  orgIdentifier: ing175org
+  projectIdentifier: ing175ip1
+  pipeline:
+    identifier: Kingsroad
+    stages:
+      - stage:
+          identifier: deployapp
+          template:
+            templateInputs:
+              type: Deployment
+              spec:
+                environment:
+                  environmentRef: test
+                  infrastructureDefinitions:
+                    - identifier: k8shelm
+                service:
+                  serviceRef: transactionviewer
